@@ -530,9 +530,10 @@ async def http_exception_handler(request, exc):
         status_code=exc.status_code,
         content={
             "error": True,
-        "status_code": exc.status_code,
-        "detail": exc.detail
-    }
+            "status_code": exc.status_code,
+            "detail": exc.detail
+        }
+    )
 
 
 # ============================================================================
