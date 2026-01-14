@@ -386,7 +386,7 @@ async def list_regimes() -> Dict[str, Any]:
 
 
 @app.get("/current-regime")
-async def get_current_regime() -> Dict[str, Any]:
+async def get_current_regime():
     try:
         symbol = "BNBFDUSD"
         url = f"https://api.binance.com/api/v3/klines"
