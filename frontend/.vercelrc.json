@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "react",
+  "env": {
+    "REACT_APP_API_URL": "@link /dashboard-api"
+  }
+}

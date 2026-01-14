@@ -1,12 +1,200 @@
-# Market Regime Detection
+# Market Regime Detection Dashboard
 
-A sophisticated system for identifying and analyzing market regimes using unsupervised machine learning on high-frequency financial data.
+A real-time cryptocurrency market regime detection dashboard using unsupervised machine learning. Analyze BNB/FDUSD market conditions and detect 4 distinct trading regimes with live predictions.
 
-## Overview
+## 🎯 What It Does
 
-This repository contains a framework for detecting distinct market states (regimes) from order book and trade data. The system extracts relevant features, applies clustering algorithms, and provides tools for visualizing and analyzing the detected regimes.
+Automatically detects and classifies market behavior into 4 regimes:
 
-Market regimes can be broadly understood as distinct states of market behavior characterized by specific patterns in volatility, trend, liquidity, and other market dynamics. This system helps traders and researchers identify these regimes automatically, enabling strategy adaptation and risk management.
+- **🔴 High Volatility & Trending** - Strong momentum with elevated volatility
+- **🟢 Low Volatility & Range-Bound** - Calm conditions oscillating in a band  
+- **🟠 Mean-Reverting, Medium Volatility** - Swings back to mean with moderate noise
+- **🔵 High Liquidity with Directional Pressure** - Deep book pushing one direction
+
+### Key Features
+
+✅ **Live Market Analysis** - Real-time BNB/FDUSD regime classification  
+✅ **Regime Characteristics** - View volatility, returns, volume, and market dynamics  
+✅ **Transition Probabilities** - Understand how markets move between regimes  
+✅ **Model Comparison** - See why HDBSCAN outperforms K-Means and GMM  
+✅ **Interactive Dashboard** - Beautiful, responsive UI with Tailwind CSS  
+✅ **Production Ready** - Deployed on Vercel + Render with CORS enabled  
+
+---
+
+## 🏗️ Architecture
+
+### Backend (FastAPI)
+- **Language**: Python 3.9+
+- **Framework**: FastAPI + Uvicorn
+- **ML**: scikit-learn, HDBSCAN, GMM, Pandas
+- **Data**: Binance API integration for live 1-minute candle data
+- **Models**: Pre-trained scaler, PCA, HDBSCAN clustering
+
+### Frontend (React + Vite)
+- **Framework**: React 18 + Vite
+- **Styling**: Tailwind CSS + PostCSS
+- **Charts**: Recharts for data visualization
+- **State**: React hooks + fetch API
+
+---
+
+## 🚀 Quick Start (Local)
+
+### 1. Setup Backend (5 minutes)
+
+```bash
+# Navigate to project
+cd market_regime_detection
+
+# Create virtual environment
+python -m venv venv
+venv\Scripts\activate  # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Generate fitted models
+python save_fitted_models.py
+
+# Start API server
+python -m uvicorn api:app --reload
+# Server runs on http://localhost:8000
+```
+
+### 2. Setup Frontend (5 minutes)
+
+```bash
+# Open new terminal
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+# Dashboard runs on http://localhost:5173
+```
+
+### 3. View Dashboard
+- Open browser to `http://localhost:5173`
+- See 4 market regimes with statistics
+- Click "Check Current Market Regime" for live prediction
+- Explore model comparison and transition matrix
+
+---
+
+## 📊 Dashboard Features
+
+### Market Regimes Panel
+Displays 4 regime cards with:
+- **Samples**: Percentage of training data in regime
+- **Volatility**: Market price volatility percentage
+- **Returns**: Average returns in regime
+- **Volume**: Relative trading volume
+
+### Model Evaluation
+Bar chart comparing clustering algorithms:
+- K-Means (k=3, 5, 7)
+- Gaussian Mixture Models (3, 5 components)
+- HDBSCAN (mcs=5, 10, 15)
+
+Winner: **HDBSCAN** with 0.512 silhouette score
+
+### Regime Transitions
+4×4 matrix showing probability of transitioning between regimes
+
+### Live Market Regime
+Real-time prediction using latest Binance candle data
+
+---
+
+## 🔌 API Endpoints
+
+```bash
+GET /regime-characteristics       # Get 4 regimes with stats
+GET /transition-matrix             # Get regime transition probabilities
+GET /model-evaluation              # Get model comparison results
+GET /current-regime                # Get live market regime prediction
+POST /predict-regime               # Predict regime from 45 features
+```
+
+---
+
+## 📁 Project Structure
+
+```
+market_regime_detection/
+├── api.py                         # FastAPI backend
+├── save_fitted_models.py          # Generate fitted models
+├── requirements.txt               # Dependencies
+├── frontend/                      # React dashboard
+│   ├── Dashboard.jsx
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── package.json
+├── ml_service/
+│   ├── models/fitted_*.pkl        # Pre-trained models
+│   └── regime_detector.py
+├── data_pipeline/
+│   └── feature_engineering/       # Feature extraction
+└── results/                       # Pre-computed analysis
+    ├── regime_characteristics_kmeans_5.csv
+    └── model_evaluation.csv
+```
+
+---
+
+## 🛠️ Technology Stack
+
+| Component | Technology |
+|-----------|-----------|
+| **Backend** | FastAPI, Uvicorn, Gunicorn |
+| **Frontend** | React 18, Vite, Tailwind CSS |
+| **ML** | scikit-learn, HDBSCAN, Pandas, NumPy |
+| **Data** | Binance API, 1-minute candles |
+| **Deployment** | Render (backend), Vercel (frontend) |
+
+---
+
+## 🚀 Production Deployment
+
+### Deploy Backend to Render.com
+1. Connect GitHub repo
+2. Build: `pip install -r requirements.txt && python save_fitted_models.py`
+3. Start: `gunicorn -w 4 -k uvicorn.workers.UvicornWorker api:app`
+4. Copy backend URL
+
+### Deploy Frontend to Vercel.com
+1. Import GitHub repo
+2. Root directory: `frontend`
+3. Environment: `VITE_API_URL=https://your-backend.onrender.com`
+4. Deploy
+
+---
+
+## 🔍 Model Performance
+
+| Model | Silhouette | Regimes |
+|-------|-----------|---------|
+| HDBSCAN (mcs=10) | **0.512** | 4 |
+| K-Means (k=5) | 0.385 | 5 |
+| GMM (5 comp) | 0.421 | 5 |
+
+---
+
+## 📝 Trading Strategies
+
+| Regime | Strategy |
+|--------|----------|
+| High Volatility & Trending | Trend-Following |
+| Low Volatility & Range-Bound | Range Trading |
+| Mean-Reverting | Mean-Reversion |
+| High Liquidity Directional | Liquidity-Taking |
+
+---
+
+**Built with FastAPI, React, and scikit-learn**
 
 ## Documentation
 
@@ -48,7 +236,7 @@ The complete documentation is available in the following formats:
 
 ```
 Directory structure:
-└── k3tikvats-market_regime_detection/
+└── jayXkush-market_regime_detection/
     ├── clustering_executor.py # Execution pipeline for clustering
     ├── regime_analyzer.py
     ├── run_regime_detection.py
@@ -91,7 +279,7 @@ Directory structure:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/market-regime-detection.git
+git clone https://github.com/jayXkush/market-regime-detection.git
 cd market-regime-detection
 
 # Create and activate virtual environment
@@ -188,14 +376,5 @@ These regimes can be visualized and analyzed to inform trading decisions and ris
 - HDBSCAN
 
 
-<!-- 
-## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request -->
 

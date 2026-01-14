@@ -13,19 +13,10 @@ import base64
 from datetime import datetime
 
 class RegimeAnalyzer:
-    """
-    Analyze market regimes detected by clustering algorithms and provide interpretable insights
-    """
+    
     
     def __init__(self, features_df, labels_dict, output_dir='./results'):
-        """
-        Initialize the regime analyzer
         
-        Args:
-            features_df: DataFrame containing the extracted features
-            labels_dict: Dictionary of model names and their cluster labels
-            output_dir: Directory to save output files
-        """
         self.features = features_df
         self.labels = labels_dict
         self.output_dir = Path(output_dir)
@@ -36,15 +27,7 @@ class RegimeAnalyzer:
         self.transition_matrices = {}
     
     def analyze_regimes(self, model_name=None):
-        """
-        Analyze the characteristics of each regime detected by the specified model
         
-        Args:
-            model_name: Name of the model to analyze (None for all models)
-            
-        Returns:
-            Dictionary of regime characteristics
-        """
         if model_name is not None:
             if model_name not in self.labels:
                 raise ValueError(f"Model {model_name} not found in labels")
@@ -55,12 +38,10 @@ class RegimeAnalyzer:
         for model in models_to_analyze:
             print(f"Analyzing regimes for model: {model}")
             labels = self.labels[model]
-            
-            # Create a DataFrame with features and labels
+           
             labeled_data = self.features.copy()
             labeled_data['regime'] = labels if not isinstance(labels, pd.Series) else labels.values
-            
-            # Analyze each regime
+     
             unique_labels = np.unique(labeled_data['regime'])
             characteristics = {}
             regime_names = {}
@@ -181,15 +162,7 @@ class RegimeAnalyzer:
         return stats
     
     def _generate_regime_name(self, stats):
-        """
-        Generate a descriptive name for a regime based on its statistics
         
-        Args:
-            stats: Dictionary of statistics for the regime
-            
-        Returns:
-            String name for the regime
-        """
         parts = []
         
         # Add price behavior first 
@@ -453,16 +426,7 @@ class RegimeAnalyzer:
         return file_path
     
     def visualize_regime_distribution(self, model_name=None, method='umap'):
-        """
-        Visualize the distribution of regimes in feature space using dimensionality reduction
         
-        Args:
-            model_name: Name of the model to visualize (None for the first model)
-            method: Dimensionality reduction method ('umap', 'tsne', or 'pca')
-            
-        Returns:
-            Path to the saved visualization
-        """
         if model_name is None:
             model_name = next(iter(self.labels.keys()))
         
@@ -471,7 +435,7 @@ class RegimeAnalyzer:
         
         labels = self.labels[model_name]
         
-        # Apply dimensionality reduction
+        
         if method == 'umap':
             reducer = umap.UMAP(n_components=2, random_state=42)
             embedding = reducer.fit_transform(self.features)
@@ -485,7 +449,6 @@ class RegimeAnalyzer:
         else:
             raise ValueError(f"Unknown visualization method: {method}")
         
-        # Create a DataFrame for visualization
         vis_df = pd.DataFrame({
             'x': embedding[:, 0],
             'y': embedding[:, 1],
@@ -608,16 +571,7 @@ class RegimeAnalyzer:
         return file_path
     
     def visualize_key_features(self, model_name=None, top_n=5):
-        """
-        Visualize the distribution of the top N most distinctive features across regimes
         
-        Args:
-            model_name: Name of the model to use for regimes (None for the first model)
-            top_n: Number of top features to visualize
-            
-        Returns:
-            List of paths to the saved visualizations
-        """
         if model_name is None:
             model_name = next(iter(self.labels.keys()))
         
@@ -639,16 +593,7 @@ class RegimeAnalyzer:
         return paths
     
     def _find_distinctive_features(self, model_name, top_n=5):
-        """
-        Find the top N features that best distinguish between regimes
         
-        Args:
-            model_name: Name of the model
-            top_n: Number of top features to return
-            
-        Returns:
-            List of feature names
-        """
         # Calculate feature distinctiveness using F-statistic (ANOVA)
         from scipy import stats
         
@@ -672,15 +617,7 @@ class RegimeAnalyzer:
         return [f[0] for f in sorted_features[:top_n]]
     
     def generate_summary_report(self, model_name=None):
-        """
-        Generate a summary report of the regime analysis
         
-        Args:
-            model_name: Name of the model to analyze (None for the first model)
-            
-        Returns:
-            Dictionary with report data
-        """
         if model_name is None:
             model_name = next(iter(self.labels.keys()))
         

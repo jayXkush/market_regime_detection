@@ -1,4 +1,4 @@
-# run_regime_detection.py
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,13 +8,12 @@ from pathlib import Path
 import argparse
 import logging
 
-# Import project components
 from data_pipeline.feature_engineering.normalizer import Normalizer
 from clustering_executor import ClusteringExecutor
 from regime_analyzer import RegimeAnalyzer
 from ml_service.regime_detector import MarketRegimeDetector
 from data_pipeline.feature_engineering.feature_extractor import FeatureExtractor
-# Configure logging
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -23,17 +22,8 @@ logger = logging.getLogger('market_regime_detection')
 
 
 def run_regime_detection(features_df=None, output_dir="./results"):
-    """
-    Run the complete market regime detection pipeline
     
-    Args:
-        features_df: DataFrame containing features (or None to generate synthetic data)
-        output_dir: Directory to save results
-        
-    Returns:
-        Dictionary with results
-    """
-    # Create output directory
+    
     output_path = Path(output_dir)
     output_path.mkdir(exist_ok=True)
 
@@ -41,10 +31,10 @@ def run_regime_detection(features_df=None, output_dir="./results"):
         logger.error("No feature data provided. Please ensure feature extraction succeeded.")
         raise ValueError("No feature data provided.")
     
-    # Store the original index for later use
+    
     original_index = features_df.index
     
-    # Select only numeric columns for normalization and clustering
+    
     logger.info("Selecting numeric columns for modeling")
     features_numeric = features_df.select_dtypes(include=[np.number])
     logger.info(f"Selected {len(features_numeric.columns)} numeric features out of {len(features_df.columns)} total columns")
@@ -161,16 +151,7 @@ def run_regime_detection(features_df=None, output_dir="./results"):
     }
 
 def generate_basic_report(features_df, output_dir):
-    """
-    Generate a basic report when clustering fails
     
-    Args:
-        features_df: DataFrame with features
-        output_dir: Directory to save the report
-        
-    Returns:
-        Path to the saved report
-    """
     output_path = Path(output_dir)
     report_path = output_path / "market_regime_analysis.md"
     
@@ -236,21 +217,7 @@ def generate_basic_report(features_df, output_dir):
 
 def generate_markdown_report(features, labels, evaluation_results, regime_characteristics, 
                            transition_matrix, best_model, output_dir):
-    """
-    Generate a comprehensive markdown report
     
-    Args:
-        features: DataFrame with features
-        labels: Dictionary of model labels
-        evaluation_results: DataFrame with model evaluation results
-        regime_characteristics: Dictionary of regime characteristics
-        transition_matrix: DataFrame with transition matrix
-        best_model: Name of the best model
-        output_dir: Directory to save the report
-        
-    Returns:
-        Path to the saved report
-    """
     output_path = Path(output_dir)
     report_path = output_path / "market_regime_analysis.md"
     
@@ -663,13 +630,7 @@ def main():
     logger.info(f"Results saved to {output_file}")
 
 def plot_regimes(features, symbol):
-    """
-    Plot price and detected regimes.
     
-    Args:
-        features (pd.DataFrame): DataFrame with features and regime labels
-        symbol (str): Trading symbol
-    """
     plt.figure(figsize=(15, 10))
     
     # Plot 1: Price with regimes as color

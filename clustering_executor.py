@@ -1,4 +1,4 @@
-# clustering_executor.py
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,7 +9,6 @@ import seaborn as sns
 from pathlib import Path
 import logging
 
-# Setup logger
 logger = logging.getLogger(__name__)
 
 from ml_service.models.kmeans import KMeansModel
@@ -18,15 +17,9 @@ from ml_service.models.hdbscan import HDBSCANModel
 from data_pipeline.feature_engineering.normalizer import Normalizer
 
 class ClusteringExecutor:
-    """Execute and evaluate clustering models for market regime detection"""
     
     def __init__(self, features_df):
-        """
-        Initialize the clustering executor
-        
-        Args:
-            features_df: DataFrame containing the extracted features
-        """
+       
         self.features = features_df
         self.normalizer = None
         self.normalized_features = None
@@ -37,16 +30,7 @@ class ClusteringExecutor:
         self.output_dir.mkdir(exist_ok=True)
     
     def normalize_features(self, method='standard', pca_components=None):
-        """
-        Normalize features using the specified method
         
-        Args:
-            method: Normalization method ('standard', 'minmax', 'robust')
-            pca_components: Number of PCA components (None for no dimensionality reduction)
-            
-        Returns:
-            DataFrame of normalized features
-        """
         print(f"Normalizing features using {method}...")
         self.normalizer = Normalizer(method=method, pca_components=pca_components)
         self.normalized_features = self.normalizer.fit_transform(self.features)
@@ -100,12 +84,7 @@ class ClusteringExecutor:
         return self.models
     
     def run_clustering(self):
-        """
-        Run all clustering models on the normalized data
         
-        Returns:
-            Dictionary of model labels
-        """
         if self.normalized_features is None:
             raise ValueError("Features must be normalized before clustering")
         
@@ -127,12 +106,7 @@ class ClusteringExecutor:
         return self.labels
     
     def evaluate_models(self):
-        """
-        Evaluate each trained clustering model.
         
-        Returns:
-            pd.DataFrame: Evaluation metrics for each model
-        """
         logger.info("Evaluating clustering models...")
         
         # Store evaluation metrics
@@ -228,16 +202,7 @@ class ClusteringExecutor:
         plt.close()
     
     def visualize_clusters(self, method='umap', model_name=None):
-        """
-        Visualize clusters in 2D space using dimensionality reduction
         
-        Args:
-            method: Dimensionality reduction method ('umap', 'pca', 'tsne')
-            model_name: Name of the model to visualize (None for the best model)
-            
-        Returns:
-            Figure with the visualization
-        """
         if not self.labels:
             raise ValueError("Models must be run before visualization")
         
@@ -330,15 +295,7 @@ class ClusteringExecutor:
         return vis_df
     
     def get_best_model(self, metric='silhouette_score'):
-        """
-        Get the best model based on the specified metric
         
-        Args:
-            metric: Metric to use for ranking ('silhouette_score', 'davies_bouldin_score', 'calinski_harabasz_score')
-            
-        Returns:
-            Name of the best model
-        """
         if self.evaluation_results is None or self.evaluation_results.empty:
             raise ValueError("Models must be evaluated first")
         
@@ -352,15 +309,7 @@ class ClusteringExecutor:
         return best_model
     
     def save_labels(self, model_name=None):
-        """
-        Save cluster labels to CSV file
         
-        Args:
-            model_name: Name of the model to save labels for (None for all models)
-            
-        Returns:
-            Path to the saved file
-        """
         if not self.labels:
             raise ValueError("Models must be run before saving labels")
         
