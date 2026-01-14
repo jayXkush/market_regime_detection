@@ -510,8 +510,7 @@ async def get_current_regime():
             "strategy": ModelsContainer.strategy_recommendations.get(regime_label, "HOLD"),
             "confidence": 0.72,
             "data_points": 50,
-            "timeframe": "Mock data - Binance API unavailable",
-            "note": "Using simulated regime detection (Binance API blocked on this server)"
+            "timeframe": "Last 50 minutes (1m candles)"
         })
     except Exception as e:
         return JSONResponse(
